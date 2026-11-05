@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Fixed
+
+### Changed
+
+### Removed
+
+### Breaking Changes
+
+## [1.0.0] - 2026-11-05
+
+### Added
+- Support for the `POST /v1/CreateCrossBorderInvoice` endpoint via `CrossBorderInvoiceApi::createInvoice(CreateCrossBorderInvoiceRequest): CreateCrossBorderInvoiceResponse` and `ShippyProFactory::createCrossBorderInvoiceApi()`, carrying the structured tax identifiers and exporter reference that the `Ship` request cannot express: a reusable `InvoiceParty` (ShipperExporter/Consignee/Importer) with `VatNumber`/`Eori`/`CustomReference`, `CrossBorderGoodsItem`/`CrossBorderGoodsCollection`, and a `DateOfExportation` value object. Maps shipcloud `sender_tax_number` -> `ShipperExporter.VatNumber`, `receiver_tax_number` -> `Consignee.VatNumber` and `exporter_reference` -> `ShipperExporter.CustomReference`.
+- `examples/cross-border.php` plus the `make examples-cross-border` target demonstrating DE->CH and DE->GB cross-border shipments, each combining a `Ship` call (label + CN22 customs line items + incoterm) with a `CreateCrossBorderInvoice` call (tax identifiers + exporter reference).
+- A gap-analysis section in `README.md` documenting the shipcloud-to-ShippyPro capability mapping, the fields now covered through `CreateCrossBorderInvoice`, and the fields with no ShippyPro equivalent (`duties_and_taxes`/`transportation` third-party accounts, `contents_explanation`, `drop_off_location`, `posting_date`, `additional_fees`).
 - Support for the `POST /v1/Ship` endpoint via `ShipApi::ship(ShipRequest): ShipResponse` and `ShippyProFactory::createShipApi()`, with typed request/response modeling: `Address`/`CountryCode`, `Parcel`/`ParcelCollection`, `MoneyAmount` (TotalValue), `Insurance`, `CashOnDelivery`, a `Customs` block with `Cn22Item`/`Cn22ItemCollection` and the `Incoterm`/`CustomInfoContentsType`/`NonDeliveryOption` enums, `CarrierOption`/`CarrierOptionCollection` with documented DHL/UPS helper constants, `LabelFormatting` (PDF/ZPL, cm dimensions, rotate/split/page), and a `ShipResponse` that normalizes the polymorphic `LabelURL` into a typed `LabelUrlCollection`.
 - `examples/ship.php` plus the `make examples-ship` target demonstrating a cross-border shipment with customs data.
 - Support for the `POST /v1/Ping` endpoint (Bearer-authenticated connection/auth check).
@@ -29,4 +44,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
-[unreleased]: https://github.com/DjThossi/shippy-pro-sdk/compare/HEAD
+[unreleased]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/DjThossi/shippy-pro-sdk/releases/tag/v1.0.0
