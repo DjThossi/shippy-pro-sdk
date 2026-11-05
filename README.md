@@ -198,6 +198,75 @@ The ShippyPro API allows **20 calls per 10 seconds**. The SDK does not implement
 rate limiting itself; when the limit is exceeded, the API responds with `429`,
 which you can observe via `StatusCode::isTooManyRequests()`.
 
+## Cross-border capabilities (CH / GB)
+
+This section documents how the SDK covers cross-border orders to Switzerland
+(CH) and Great Britain (GB): which capabilities are expressible on the `Ship`
+request, which are carried through `CreateCrossBorderInvoice`, and which have no
+ShippyPro equivalent at all.
+
+### Capability mapping
+
+The cross-border capabilities and their resolution in this SDK:
+
+| Capability | Resolution | SDK field / object |
+|---|---|---|
+| carrier selection | covered | `CarrierName` / `CarrierService` / `CarrierID` (`ShipRequest` + `ShipMapper`) |
+| recipient address | covered | `Domain\Address` (+ `CountryCode`) |
+| package | covered | `Parcel` / `ParcelCollection` |
+| reference number | covered (caller-supplied) | `ShipRequest.orderId` / note fields |
+| additional services | covered | `CarrierOption` / `CarrierOptionCollection` |
+| billing | partial | `Customs.billAccountNumber` (EXW only); third-party duties/taxes not supported |
+| customs declaration | covered (line items) + tax / reference via invoice | `Customs` / `Cn22Item` (lines); `CreateCrossBorderInvoice` (tax numbers, exporter reference) |
+| incoterm | covered | `Incoterm` enum |
+
+For cross-border CH/GB shipments, the cross-border classification and the
+mandatory declared total value are enforced by `ShipRequest::isCrossBorder()`
+together with the total-value invariant. The declared total value is sent to
+ShippyPro as the single `TotalValue` field (a `MoneyAmount`).
+
+### Fields covered through `CreateCrossBorderInvoice`
+
+The following three fields have **no** equivalent on the ShippyPro `Ship`
+request. They are carried instead through the `CreateCrossBorderInvoice` method:
+
+| Field | ShippyPro target | SDK location |
+|---|---|---|
+| sender tax number (e.g. `DE111111111`) | `ShipperExporter.VatNumber` | `InvoiceParty.vatNumber` (shipper/exporter) |
+| receiver tax number (e.g. `GB123456789000`, `CHE123456789`) | `Consignee.VatNumber` | `InvoiceParty.vatNumber` (consignee) |
+| exporter reference (e.g. `CHE-123.456.789 MWST`) | `ShipperExporter.CustomReference` | `InvoiceParty.customReference` (shipper/exporter) |
+
+On the `Ship` request the sender tax identity is sourced by ShippyPro from the
+account profile; `CreateCrossBorderInvoice` carries it per request instead. A
+per-shipment IOSS number remains available on `Ship` through the `sp_ioss`
+attribute (`ParcelAttributes.spIoss`).
+
+### Genuine limitations (never sent on the `Ship` request)
+
+The following five customs fields have no ShippyPro equivalent and are therefore
+never sent on the `Ship` request:
+
+- `duties_and_taxes` third-party billing — ShippyPro's only `Ship` billing
+  concept is `BillAccountNumber`, which is permitted only with the `EXW` incoterm
+  and is not equivalent to a separate third-party duties/taxes account. A UPS
+  `transportation` third-party account is subject to the same limitation.
+- `contents_explanation`
+- `drop_off_location`
+- `posting_date`
+- `additional_fees`
+
+### ZPL label dimensions (centimetres)
+
+Carrier-specific ZPL label formats are expressed through `LabelFormatting` /
+`LabelType`. Inch-based ZPL sizes are sent to ShippyPro in centimetres, rounded
+to two decimal places:
+
+- DHL `zpl2_103x199mm_203dpi` ≈ **10.30 × 19.90 cm**
+- UPS `zpl2_4x8in_203dpi` (4 × 8 in) ≈ **10.16 × 20.32 cm**
+
+`LabelFormatting` performs no range validation on width or height; the concrete
+ZPL sizes above are expressible without any check.
+
 ## Non-goals (current iteration)
 
 - No endpoints other than `POST /v1/Ping` and `GET /v2/status`.

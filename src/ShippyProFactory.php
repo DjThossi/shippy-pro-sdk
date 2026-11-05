@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace DjThossi\ShippyProSdk;
 
+use DjThossi\ShippyProSdk\Api\CrossBorderInvoiceApi;
 use DjThossi\ShippyProSdk\Api\PingApi;
 use DjThossi\ShippyProSdk\Api\ShipApi;
 use DjThossi\ShippyProSdk\Api\StatusApi;
 use DjThossi\ShippyProSdk\Http\Client;
+use DjThossi\ShippyProSdk\Mapper\CrossBorderInvoiceMapper;
 use DjThossi\ShippyProSdk\Mapper\ErrorMapper;
 use DjThossi\ShippyProSdk\Mapper\HeaderMapper;
 use DjThossi\ShippyProSdk\Mapper\PingMapper;
@@ -51,6 +53,16 @@ final readonly class ShippyProFactory
         );
     }
 
+    public function createCrossBorderInvoiceApi(): CrossBorderInvoiceApi
+    {
+        return new CrossBorderInvoiceApi(
+            $this->createClient(),
+            $this->createCrossBorderInvoiceMapper(),
+            $this->createHeaderMapper(),
+            $this->createErrorMapper(),
+        );
+    }
+
     private function createClient(): Client
     {
         return new Client(
@@ -74,6 +86,11 @@ final readonly class ShippyProFactory
     private function createShipMapper(): ShipMapper
     {
         return new ShipMapper();
+    }
+
+    private function createCrossBorderInvoiceMapper(): CrossBorderInvoiceMapper
+    {
+        return new CrossBorderInvoiceMapper();
     }
 
     private function createHeaderMapper(): HeaderMapper
