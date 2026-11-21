@@ -12,8 +12,8 @@ namespace DjThossi\ShippyProSdk\Domain;
  * does not provide an inches convenience type. A 4x8 inch label must be
  * expressed in centimetres (approximately 10.16 x 20.32 cm).
  *
- * These controls are distinct from asynchronous label retrieval, which is not
- * supported in this iteration.
+ * These controls are distinct from the `Async` flag (see ShipRequest::$async),
+ * which only switches synchronous/asynchronous label generation.
  */
 final readonly class LabelFormatting
 {

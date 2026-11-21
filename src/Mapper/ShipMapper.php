@@ -78,6 +78,7 @@ final readonly class ShipMapper
     public const string FIELD_ROTATE = 'Rotate';
     public const string FIELD_PAGE_NUMBER = 'PageNumber';
     public const string FIELD_SPLIT_PAGES = 'SplitPages';
+    public const string FIELD_ASYNC = 'Async';
 
     // Response field names (exact v1.json names).
     public const string FIELD_RESULT = 'Result';
@@ -193,6 +194,10 @@ final readonly class ShipMapper
         }
         if ($request->labelFormatting !== null) {
             $params = [...$params, ...$this->encodeLabelFormatting($request->labelFormatting)];
+        }
+
+        if ($request->async !== null) {
+            $params[self::FIELD_ASYNC] = $request->async;
         }
 
         return $params;

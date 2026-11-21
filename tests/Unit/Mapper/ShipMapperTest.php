@@ -300,6 +300,34 @@ final class ShipMapperTest extends TestCase
         $this->assertSame('TN1', $body->parcels?->all()[0]->trackingNumber);
     }
 
+    public function testAsyncIsOmittedWhenNotSet(): void
+    {
+        $params = (new ShipMapper())->encodeParams($this->minimalRequest());
+
+        $this->assertArrayNotHasKey(ShipMapper::FIELD_ASYNC, $params);
+    }
+
+    public function testAsyncFalseIsEncodedExplicitly(): void
+    {
+        $address = $this->address('US');
+        $request = new ShipRequest(
+            $address,
+            $address,
+            new ParcelCollection(new Parcel(5.0, 5.0, 5.0, 10.0)),
+            'ORDER1',
+            'Goods',
+            'MyDHL',
+            'EXPRESS',
+            23,
+            async: false,
+        );
+
+        $params = (new ShipMapper())->encodeParams($request);
+
+        $this->assertArrayHasKey(ShipMapper::FIELD_ASYNC, $params);
+        $this->assertFalse($params[ShipMapper::FIELD_ASYNC]);
+    }
+
     private function minimalRequest(): ShipRequest
     {
         return new ShipRequest(

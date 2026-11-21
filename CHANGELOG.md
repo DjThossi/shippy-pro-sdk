@@ -17,6 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+## [1.0.1] - 2026-11-21
+
+### Added
+- `ShipRequest::$async` (`?bool`, default `null`) mapped to the `Async` field of the `Ship` request. ShippyPro handles `Ship` asynchronously by default, so labels may not be part of the response; pass `async: false` to force synchronous label generation. When `null`, the field is omitted and the API default applies.
+
+### Fixed
+
+### Changed
+
+### Removed
+
+### Breaking Changes
+
 ## [1.0.0] - 2026-11-05
 
 ### Added

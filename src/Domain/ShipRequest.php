@@ -45,6 +45,7 @@ final readonly class ShipRequest
         public ?Address $returnTo = null,
         public ?LabelFormatting $labelFormatting = null,
         public ?ParcelAttributes $attributes = null,
+        public ?bool $async = null,
     ) {
         $this->assertIncotermBillAccountConsistency();
         $this->assertCrossBorderHasTotalValue();
