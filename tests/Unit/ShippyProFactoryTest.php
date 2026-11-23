@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DjThossi\ShippyProSdk\Tests\Unit;
 
 use DjThossi\ShippyProSdk\Api\CrossBorderInvoiceApi;
+use DjThossi\ShippyProSdk\Api\GetOrderApi;
 use DjThossi\ShippyProSdk\Api\PingApi;
 use DjThossi\ShippyProSdk\Api\ShipApi;
 use DjThossi\ShippyProSdk\Api\StatusApi;
@@ -42,6 +43,11 @@ final class ShippyProFactoryTest extends TestCase
     public function testCreateShipApiReturnsShipApi(): void
     {
         $this->assertInstanceOf(ShipApi::class, $this->factory->createShipApi());
+    }
+
+    public function testCreateGetOrderApiReturnsGetOrderApi(): void
+    {
+        $this->assertInstanceOf(GetOrderApi::class, $this->factory->createGetOrderApi());
     }
 
     public function testCreateCrossBorderInvoiceApiReturnsCrossBorderInvoiceApi(): void

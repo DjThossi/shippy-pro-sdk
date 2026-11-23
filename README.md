@@ -6,9 +6,11 @@ Everything the SDK returns is a typed object — no raw arrays leak into the pub
 
 This library supports the following endpoints at the moment:
 
+- `POST /v1/GetOrder` — retrieve order/shipment details (tracking info, label URLs) by ShippyPro `OrderID`.
 - `POST /v1/Ping` — Bearer-authenticated connection/auth check of the v1 API.
-- `GET /v2/status` — public (unauthenticated) health check of the v2 API.
 - `POST /v1/Ship` — create a shipment and get labels, incl. customs (CN22) and DHL/UPS carrier options.
+
+- `GET /v2/status` — public (unauthenticated) health check of the v2 API.
 
 This library is made for PHP projects featuring PHP version 8.5+.
 
@@ -66,6 +68,23 @@ if ($response->statusCode->isOk()) {
 ```
 
 See the runnable examples in [`examples/`](examples) (`make examples-ping`, `make examples-status`).
+
+### GetOrder (`POST /v1/GetOrder`)
+
+```php
+use DjThossi\ShippyProSdk\Domain\GetOrderRequest;
+
+$response = $factory->createGetOrderApi()->getOrder(new GetOrderRequest(385590136));
+
+if ($response->hasError()) {
+    echo $response->error->detail; // e.g. "No orders found"
+} else {
+    echo $response->responseBody->trackingNumber;
+    foreach ($response->responseBody->labelUrls as $url) {
+        echo $url;
+    }
+}
+```
 
 ### Error handling
 

@@ -51,3 +51,7 @@ examples-ship: ## Runs the example code for the Ship API in the PHP version whic
 .PHONY: examples-cross-border
 examples-cross-border: ## Runs the example code for the cross-border CH/GB shipment in the PHP version which is defined in DOCKER_COMPOSE_SERVICE_NAME
 	docker compose run --rm ${DOCKER_COMPOSE_SERVICE_NAME} php examples/cross-border.php
+
+.PHONY: examples-get-order
+examples-get-order: ## Runs the example code for the GetOrder API in the PHP version which is defined in DOCKER_COMPOSE_SERVICE_NAME
+	docker compose run --rm ${DOCKER_COMPOSE_SERVICE_NAME} php examples/get-order.php

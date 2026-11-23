@@ -17,6 +17,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+## [1.1.0] - 2026-11-23
+
+### Added
+- Support for the `POST /v1/GetOrder` endpoint via `GetOrderApi::getOrder(GetOrderRequest): GetOrderResponse` and `ShippyProFactory::createGetOrderApi()`, returning order/shipment details (tracking carrier/number/link, additional tracking numbers, marketplace platform, tracking status and a typed `LabelUrlCollection`). Error bodies such as `{"Error": "No orders found"}` are surfaced through `GetOrderResponse::$error`; empty `ErrorType`/`ErrorSuggestion` objects map to `null`.
+- `examples/get-order.php` plus the `make examples-get-order` target.
+
+### Fixed
+
+### Changed
+
+### Removed
+
+### Breaking Changes
+
 ## [1.0.1] - 2026-11-21
 
 ### Added
@@ -57,5 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
-[unreleased]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/DjThossi/shippy-pro-sdk/releases/tag/v1.0.0
