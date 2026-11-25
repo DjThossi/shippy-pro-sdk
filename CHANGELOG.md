@@ -17,6 +17,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
+## [1.2.0] - 2026-11-25
+
+### Added
+
+- Support for the `POST /v1/UploadPaperlessDocumentation` endpoint via `PaperlessDocumentationApi::uploadPaperlessDocumentation(UploadPaperlessDocumentationRequest): UploadPaperlessDocumentationResponse` and `ShippyProFactory::createPaperlessDocumentationApi()`. The request takes `transactionId`, `name`, `country` (`CountryCode`), a base64 encoded `document` and an optional `PaperlessDocumentType` (`Invoice`, `AirWaybill`, `ProformaInvoice`, `CertificateOfOrigin`, `UsmcaCertificateOfOrigin`, `CommercialInvoice`, `CustomsDeclaration`, `Other`). Invalid input throws `InvalidPaperlessDocumentationException`.
+- `PaperlessDocumentationApi::uploadPaperlessDocumentationFromFile()` (reads a local file path) and `uploadPaperlessDocumentationFromUrl()` (downloads an http(s) URL first, without sending ShippyPro credentials via the new `Client::download()`). Failures throw `PaperlessDocumentLoadException`.
+- `examples/paperless.php` plus the `make examples-paperless` target.
+
+### Fixed
+
+### Changed
+
+### Removed
+
+### Breaking Changes
+
 ## [1.1.0] - 2026-11-23
 
 ### Added
@@ -71,7 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
-[unreleased]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.0.1...v1.1.0
-[1.0.1]: https://github.com/DjThossi/shippy-pro-sdk/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/DjThossi/shippy-pro-sdk/releases/tag/v1.0.0
+[unreleased]: https://github.com/DjThossi/shippy-pro-sdk/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/DjThossi/shippy-pro-sdk/compare/1.1.0...1.2.0
+[1.1.0]: https://github.com/DjThossi/shippy-pro-sdk/compare/1.0.1...1.1.0
+[1.0.1]: https://github.com/DjThossi/shippy-pro-sdk/compare/1.0.0...1.0.1
+[1.0.0]: https://github.com/DjThossi/shippy-pro-sdk/releases/tag/1.0.0

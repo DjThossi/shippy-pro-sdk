@@ -51,6 +51,21 @@ final class ClientTest extends TestCase
         $this->assertSame('{"Method":"Ping","Params":{}}', (string) $request->getBody());
     }
 
+    public function testDownloadSendsPlainGetWithoutCredentials(): void
+    {
+        $this->mockHandler->append(new Response(200, [], 'pdf-bytes'));
+        $client = $this->createClient();
+
+        $response = $client->download('https://files.example.com/invoice.pdf');
+
+        $this->assertSame('pdf-bytes', (string) $response->getBody());
+        $request = $this->lastRequest();
+        $this->assertSame('GET', $request->getMethod());
+        $this->assertSame('https://files.example.com/invoice.pdf', (string) $request->getUri());
+        $this->assertFalse($request->hasHeader('Authorization'));
+        $this->assertFalse($request->hasHeader('Referer'));
+    }
+
     public function testGetV2PublicSendsUnauthenticatedGet(): void
     {
         $this->mockHandler->append(new Response(200, [], '{"status":"HEALTHY","version":"2.0.0"}'));

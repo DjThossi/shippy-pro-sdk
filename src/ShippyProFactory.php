@@ -6,6 +6,7 @@ namespace DjThossi\ShippyProSdk;
 
 use DjThossi\ShippyProSdk\Api\CrossBorderInvoiceApi;
 use DjThossi\ShippyProSdk\Api\GetOrderApi;
+use DjThossi\ShippyProSdk\Api\PaperlessDocumentationApi;
 use DjThossi\ShippyProSdk\Api\PingApi;
 use DjThossi\ShippyProSdk\Api\ShipApi;
 use DjThossi\ShippyProSdk\Api\StatusApi;
@@ -14,6 +15,7 @@ use DjThossi\ShippyProSdk\Mapper\CrossBorderInvoiceMapper;
 use DjThossi\ShippyProSdk\Mapper\ErrorMapper;
 use DjThossi\ShippyProSdk\Mapper\GetOrderMapper;
 use DjThossi\ShippyProSdk\Mapper\HeaderMapper;
+use DjThossi\ShippyProSdk\Mapper\PaperlessDocumentationMapper;
 use DjThossi\ShippyProSdk\Mapper\PingMapper;
 use DjThossi\ShippyProSdk\Mapper\ShipMapper;
 use DjThossi\ShippyProSdk\Mapper\StatusMapper;
@@ -75,6 +77,16 @@ final readonly class ShippyProFactory
         );
     }
 
+    public function createPaperlessDocumentationApi(): PaperlessDocumentationApi
+    {
+        return new PaperlessDocumentationApi(
+            $this->createClient(),
+            $this->createPaperlessDocumentationMapper(),
+            $this->createHeaderMapper(),
+            $this->createErrorMapper(),
+        );
+    }
+
     private function createClient(): Client
     {
         return new Client(
@@ -108,6 +120,11 @@ final readonly class ShippyProFactory
     private function createCrossBorderInvoiceMapper(): CrossBorderInvoiceMapper
     {
         return new CrossBorderInvoiceMapper();
+    }
+
+    private function createPaperlessDocumentationMapper(): PaperlessDocumentationMapper
+    {
+        return new PaperlessDocumentationMapper();
     }
 
     private function createHeaderMapper(): HeaderMapper

@@ -71,6 +71,18 @@ class Client
         ]);
     }
 
+    /**
+     * Plain GET of an arbitrary URL. The ShippyPro Authorization and Referer
+     * headers are intentionally NOT sent, so the API key never leaks to a
+     * third-party host.
+     */
+    public function download(string $url): ResponseInterface
+    {
+        return $this->client->get($url, [
+            'headers' => ['Accept' => '*/*'],
+        ]);
+    }
+
     private function buildUrl(string $endpoint): string
     {
         return $this->baseUrl . '/' . ltrim($endpoint, '/');

@@ -7,6 +7,7 @@ Everything the SDK returns is a typed object — no raw arrays leak into the pub
 This library supports the following endpoints at the moment:
 
 - `POST /v1/GetOrder` — retrieve order/shipment details (tracking info, label URLs) by ShippyPro `OrderID`.
+- `POST /v1/UploadPaperlessDocumentation` — upload an electronic trade document (ETD, PDF) before the `Ship` call.
 - `POST /v1/Ping` — Bearer-authenticated connection/auth check of the v1 API.
 - `POST /v1/Ship` — create a shipment and get labels, incl. customs (CN22) and DHL/UPS carrier options.
 
@@ -85,6 +86,42 @@ if ($response->hasError()) {
     }
 }
 ```
+
+### UploadPaperlessDocumentation (`POST /v1/UploadPaperlessDocumentation`)
+
+Upload the PDF **before** the `Ship` call. `TransactionID`, `Name` and `Country` must match the later `Ship` call exactly (case sensitive).
+
+```php
+use DjThossi\ShippyProSdk\Domain\CountryCode;
+use DjThossi\ShippyProSdk\Domain\PaperlessDocumentType;
+use DjThossi\ShippyProSdk\Domain\UploadPaperlessDocumentationRequest;
+
+$response = $factory->createPaperlessDocumentationApi()->uploadPaperlessDocumentation(
+    new UploadPaperlessDocumentationRequest(
+        transactionId: 'CH2225032',
+        name: 'Sebastian Schweizer',
+        country: new CountryCode('CH'),
+        document: base64_encode(file_get_contents('invoice.pdf')),
+        documentType: PaperlessDocumentType::Invoice, // optional, API default is Invoice
+    ),
+);
+
+echo $response->hasError() ? $response->error->detail : $response->responseBody->result; // "OK"
+```
+
+Besides the base64 variant above, the API offers two convenience methods that build the base64 string for you:
+
+```php
+$api = $factory->createPaperlessDocumentationApi();
+
+// Read a local file
+$api->uploadPaperlessDocumentationFromFile('/path/to/invoice.pdf', 'CH2225032', 'Sebastian Schweizer', new CountryCode('CH'));
+
+// Download an http(s) URL first (no ShippyPro credentials are sent to that host)
+$api->uploadPaperlessDocumentationFromUrl('https://example.com/invoice.pdf', 'CH2225032', 'Sebastian Schweizer', new CountryCode('CH'));
+```
+
+Both throw `PaperlessDocumentLoadException` if the file is missing/empty or the download fails (non-2xx, empty body), and `InvalidPaperlessDocumentationException` for invalid input such as a non-http(s) URL.
 
 ### Error handling
 
